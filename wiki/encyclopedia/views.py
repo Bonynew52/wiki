@@ -47,6 +47,49 @@ def search(request):
             "query": query,
             "entries": matches
         })
+    
+def new(request):
+    # Manejar el envío del formulario
+    if request.method == "POST":
+        title = request.POST.get("title", "")
+        content = request.POST.get("content", "")
+        
+        # Validar que título y contenido no estén vacíos
+        if not title or not content:
+            return render(request, "encyclopedia/new.html", {
+                "error": "Both title and content are required.",
+                "title": title,
+                "content": content
+            })
+        
+        # Verificar si la entrada ya existe
+        if util.get_entry(title):
+            return render(request, "encyclopedia/new.html", {
+                "error": "An entry with this title already exists.",
+                "title": title,
+                "content": content
+            })
+        
+        # Guardar la nueva entrada
+        util.save_entry(title, content)
+        # Redirigir a la nueva entrada
+        return redirect('entry', title=title)
+    
+    # Mostrar el formulario vacío
+    return render(request, "encyclopedia/new.html")
+
+def edit(request, title):
+    content = util.get_entry(title)
+
+    if request.method == "POST":
+        content = request.POST.get("content", "")
+        util.save_entry(title, content)
+        return redirect('entry', title=title)
+
+    return render(request, "encyclopedia/edit.html", {
+        "title": title,
+        "content": content
+    })
 
 
 
