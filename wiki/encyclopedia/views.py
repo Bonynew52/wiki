@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+import random
 from . import util
 
 def index(request):
@@ -48,7 +49,7 @@ def search(request):
             "entries": matches
         })
     
-def new(request):
+def new_page(request):
     # Manejar el envío del formulario
     if request.method == "POST":
         title = request.POST.get("title", "")
@@ -78,7 +79,7 @@ def new(request):
     # Mostrar el formulario vacío
     return render(request, "encyclopedia/new.html")
 
-def edit(request, title):
+def edit_page(request, title):
     content = util.get_entry(title)
 
     if request.method == "POST":
@@ -90,6 +91,15 @@ def edit(request, title):
         "title": title,
         "content": content
     })
+
+def random_page(request):
+    entries = util.list_entries()
+    random_title = random.choice(entries)
+    return render(request, "encyclopedia/entry.html", {
+        "title": random_title,
+        "content": util.get_entry(random_title)
+    })
+    
 
 
 
