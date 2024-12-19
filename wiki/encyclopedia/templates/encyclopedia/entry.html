@@ -6,6 +6,5 @@
 
 {% block body %}
     {{ content }}
-    
-    <a href="{% url 'edit' title %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'edit' title=title %}" class="btn btn-primary">Edit</a>
 {% endblock %}
